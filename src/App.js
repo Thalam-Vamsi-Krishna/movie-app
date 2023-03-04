@@ -8,6 +8,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isRetrying, setIsRetrying] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
 
   async function fetchMoviesHandler() {
     setIsLoading(true);
@@ -32,9 +33,8 @@ function App() {
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
-      setTimeout(() => {
-        fetchMoviesHandler();
-      }, 5000);
+      const id = setTimeout(fetchMoviesHandler, 5000);
+      setTimeoutId(id);
     }
   }
 
@@ -49,6 +49,7 @@ function App() {
     setIsRetrying(false);
     setError(null);
     setIsLoading(false);
+    clearTimeout(timeoutId);
   }
 
   let content = <p>Found no movies.</p>;
