@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import MoviesList from "./components/MoviesList";
+import AddMovie from "./components/AddMovie";
 import "./App.css";
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isRetrying, setIsRetrying] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
 
   const fetchMoviesHandler = useCallback(async () => {
@@ -42,8 +42,13 @@ function App() {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
+  function addMovieHandler(movie) {
+    setMovies((prevMovies) => {
+      return [...prevMovies, movie];
+    });
+  }
+
   function cancelHandler() {
-    setIsRetrying(false);
     setError(null);
     setIsLoading(false);
     clearTimeout(timeoutId);
@@ -69,6 +74,9 @@ function App() {
 
   return (
     <React.Fragment>
+      <section>
+        <AddMovie onAddMovie={addMovieHandler} />
+      </section>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
